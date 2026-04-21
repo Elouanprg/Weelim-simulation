@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Weelim — Des placements qui performent</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<template id="__bundler_thumbnail" data-bg-color="#141414">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#141414"/>
+    <g transform="translate(360, 280)">
+      <text x="0" y="0" font-family="Georgia, serif" font-size="120" font-weight="700" fill="#fff" letter-spacing="-3">Weelim</text>
+      <rect x="0" y="36" width="360" height="6" fill="#e65f0e"/>
+      <text x="0" y="120" font-family="Georgia, serif" font-size="36" font-weight="400" fill="rgba(255,255,255,0.7)">Des placements qui performent.</text>
+    </g>
+  </svg>
+</template>
+</head>
+<body>
+
+<header class="site-header">
+  <img src="assets/logo-weelim-white.svg" alt="Weelim" class="logo" />
+  <nav>
+    <a href="#">Solutions</a>
+    <a href="#">Objectifs</a>
+    <a href="#">S'informer</a>
+    <a href="#">À propos</a>
+  </nav>
+  <div class="header-search">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" placeholder="SCPI, FCPR, OPCI, SCI ..." />
+  </div>
+  <span class="phone">09 78 31 58 59</span>
+  <a href="#" class="cta">Contactez-nous</a>
+</header>
+
+<!-- OPTION B: Ribbon banner under header -->
+<a href="simulateur.html" class="sim-ribbon" data-sim-cta="ribbon">
+  <span class="sim-ribbon-tag">SIMULATEUR</span>
+  <span class="sim-ribbon-text">Projetez la performance de votre épargne en 3 minutes</span>
+  <span class="sim-ribbon-arrow">→</span>
+</a>
+
+<section class="hero">
+  <div class="hero-inner hero-grid">
+    <div class="hero-left">
+      <h1><u>Dynamiser votre patrimoine</u><br/>avec des experts</h1>
+      <p class="lead">SCPI, Private equity, assurance-vie, crowdfunding, clubs deals… accédez à un univers d'investissement à forte valeur ajoutée.</p>
+      <a href="#" class="btn-primary hero-cta">Contactez-nous</a>
+      <div class="hero-trust">
+        <div>
+          <div class="num">5 à 12% *</div>
+          <div class="label">De rentabilité annuelle</div>
+        </div>
+        <div>
+          <div class="num">+ de 10 ans</div>
+          <div class="label">D'expérience</div>
+        </div>
+        <div>
+          <div class="num">+ de 100M €</div>
+          <div class="label">De fonds conseillés</div>
+        </div>
+      </div>
+      <p class="hero-disclaimer">* Ces objectifs de performance sont fournis à titre indicatif et ne constituent pas une garantie. La recherche de performance expose à un risque de perte en capital.</p>
+    </div>
+    <div class="hero-right" aria-hidden="true">
+      <img src="assets/hero.png" alt="" class="hero-video" />
+    
+  </div>
+</section>
+
+
+
+<main class="sim-shell" style="display:none"></main>
+
+<footer class="sim-footer">
+  <div class="footer-inner">
+    <div>
+      <img src="assets/logo-weelim-white.svg" alt="Weelim" class="footer-logo" />
+      <p>Des placements qui performent grâce à un partenaire expert en gestion de patrimoine.</p>
+      <div class="footer-certifs">
+        <span>CNCGP · depuis 2019</span>
+        <span>Orias N° 19004224</span>
+        <span>CCI Bordeaux · CPI 3301</span>
+      </div>
+    </div>
+    <div>
+      <h6>Solutions</h6>
+      <a>SCPI</a><a>Assurance-vie</a><a>Private Equity</a><a>Crowdfunding</a>
+    </div>
+    <div>
+      <h6>Objectifs</h6>
+      <a>Préparer la retraite</a><a>Défiscaliser</a><a>Compléter ses revenus</a><a>Diversifier</a>
+    </div>
+    <div>
+      <h6>Contact</h6>
+      <a>09 78 31 58 59</a><a>Prendre RDV</a><a>Nous contacter</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>Weelim © 2025 — Tous droits réservés</span>
+    <span>Mentions légales · Politique de confidentialité</span>
+  </div>
+</footer>
+
+<!-- Tweaks panel (hidden by default) -->
+<div class="tweaks-panel" id="tweaksPanel">
+  <h6>Tweaks</h6>
+  <div class="tweak-row">
+    <label>Accent</label>
+    <div class="tweak-chips" data-tweak="theme">
+      <span class="tweak-chip is-active" data-value="warm">Cream</span>
+      <span class="tweak-chip" data-value="sober">Sober</span>
+      <span class="tweak-chip" data-value="emerald">Emerald</span>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <label>Gate résultat</label>
+    <div class="tweak-chips" data-tweak="gate">
+      <span class="tweak-chip is-active" data-value="blur">Blur</span>
+      <span class="tweak-chip" data-value="open">Ouvert</span>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <label>CTA finale</label>
+    <div class="tweak-chips" data-tweak="cta">
+      <span class="tweak-chip is-active" data-value="rdv">RDV</span>
+      <span class="tweak-chip" data-value="pdf">PDF</span>
+      <span class="tweak-chip" data-value="email">Email</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "theme": "warm",
+  "gate": "blur",
+  "cta": "email"
+}/*EDITMODE-END*/;
+window.__tweaks = { ...TWEAK_DEFAULTS };
+function applyTheme(t) {
+  document.body.classList.remove('theme-warm', 'theme-sober', 'theme-emerald');
+  document.body.classList.add('theme-' + t);
+}
+applyTheme(window.__tweaks.theme);
+
+// Edit-mode protocol
+window.addEventListener('message', (e) => {
+  const d = e.data || {};
+  if (d.type === '__activate_edit_mode') document.getElementById('tweaksPanel').classList.add('is-open');
+  if (d.type === '__deactivate_edit_mode') document.getElementById('tweaksPanel').classList.remove('is-open');
+});
+// Wire tweak chips
+document.querySelectorAll('.tweaks-panel .tweak-chips').forEach(group => {
+  const key = group.dataset.tweak;
+  group.querySelectorAll('.tweak-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      group.querySelectorAll('.tweak-chip').forEach(c => c.classList.remove('is-active'));
+      chip.classList.add('is-active');
+      const v = chip.dataset.value;
+      window.__tweaks[key] = v;
+      if (key === 'theme') applyTheme(v);
+      window.dispatchEvent(new CustomEvent('tweak-change', { detail: { key, value: v } }));
+      try { window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: v } }, '*'); } catch(_) {}
+    });
+  });
+});
+window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+</script>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+
+</body>
+</html>

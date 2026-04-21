@@ -1,0 +1,1084 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Simulateur d'investissement — Weelim</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;1,9..144,400&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<template id="__bundler_thumbnail" data-bg-color="#141414">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#141414"/>
+    <g transform="translate(360 200)" fill="none" stroke="#e65f0e" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M0 400 L0 0 L480 0"/>
+      <path d="M40 340 L160 220 L260 300 L440 80" stroke="#f5a261" stroke-width="10"/>
+      <circle cx="440" cy="80" r="14" fill="#e65f0e" stroke="none"/>
+    </g>
+    <text x="600" y="680" text-anchor="middle" font-family="Georgia, serif" font-size="56" fill="#f4f1ec" font-style="italic">Simulateur</text>
+  </svg>
+</template>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html"><img src="assets/logo-weelim-white.svg" alt="Weelim" class="logo" /></a>
+  <nav>
+    <a href="index.html">Accueil</a>
+    <a href="#">Solutions</a>
+    <a href="#">Objectifs</a>
+    <a href="#">À propos</a>
+  </nav>
+  <div class="header-search">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+    <input type="text" placeholder="SCPI, FCPR, OPCI, SCI ..." />
+  </div>
+  <span class="phone">09 78 31 58 59</span>
+  <a href="#" class="cta">Contactez-nous</a>
+</header>
+
+<section class="sim-page-head">
+  <div class="sim-page-head-inner">
+    <a href="index.html" class="sim-back">← Retour à l'accueil</a>
+    <h1><u>Simulez votre performance</u></h1>
+    <p>Projetez le rendement de votre épargne sur mesure en trois étapes. SCPI, assurance-vie, private equity, crowdfunding. Comparez, ajustez, décidez.</p>
+  </div>
+</section>
+
+<main class="sim-shell">
+  <div class="sim-card" id="app">
+    <!-- React mount -->
+  </div>
+</main>
+
+<footer class="sim-footer">
+  <div class="footer-inner">
+    <div>
+      <img src="assets/logo-weelim-white.svg" alt="Weelim" class="footer-logo" />
+      <p>Des placements qui performent grâce à un partenaire expert en gestion de patrimoine.</p>
+      <div class="footer-certifs">
+        <span>CNCGP · depuis 2019</span>
+        <span>Orias N° 19004224</span>
+        <span>CCI Bordeaux · CPI 3301</span>
+      </div>
+    </div>
+    <div>
+      <h6>Solutions</h6>
+      <a>SCPI</a><a>Assurance-vie</a><a>Private Equity</a><a>Crowdfunding</a>
+    </div>
+    <div>
+      <h6>Objectifs</h6>
+      <a>Préparer la retraite</a><a>Défiscaliser</a><a>Compléter ses revenus</a><a>Diversifier</a>
+    </div>
+    <div>
+      <h6>Contact</h6>
+      <a>09 78 31 58 59</a><a>Prendre RDV</a><a>Nous contacter</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>Weelim © 2025 — Tous droits réservés</span>
+    <span>Mentions légales · Politique de confidentialité</span>
+  </div>
+</footer>
+
+<!-- Tweaks panel (hidden by default) -->
+<div class="tweaks-panel" id="tweaksPanel">
+  <h6>Tweaks</h6>
+  <div class="tweak-row">
+    <label>Accent</label>
+    <div class="tweak-chips" data-tweak="theme">
+      <span class="tweak-chip is-active" data-value="warm">Cream</span>
+      <span class="tweak-chip" data-value="sober">Sober</span>
+      <span class="tweak-chip" data-value="emerald">Emerald</span>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <label>Gate résultat</label>
+    <div class="tweak-chips" data-tweak="gate">
+      <span class="tweak-chip is-active" data-value="blur">Blur</span>
+      <span class="tweak-chip" data-value="open">Ouvert</span>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <label>CTA finale</label>
+    <div class="tweak-chips" data-tweak="cta">
+      <span class="tweak-chip is-active" data-value="rdv">RDV</span>
+      <span class="tweak-chip" data-value="pdf">PDF</span>
+      <span class="tweak-chip" data-value="email">Email</span>
+    </div>
+  </div>
+</div>
+
+<script>
+const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "theme": "warm",
+  "gate": "blur",
+  "cta": "email"
+}/*EDITMODE-END*/;
+window.__tweaks = { ...TWEAK_DEFAULTS };
+function applyTheme(t) {
+  document.body.classList.remove('theme-warm', 'theme-sober', 'theme-emerald');
+  document.body.classList.add('theme-' + t);
+}
+applyTheme(window.__tweaks.theme);
+
+// Edit-mode protocol
+window.addEventListener('message', (e) => {
+  const d = e.data || {};
+  if (d.type === '__activate_edit_mode') document.getElementById('tweaksPanel').classList.add('is-open');
+  if (d.type === '__deactivate_edit_mode') document.getElementById('tweaksPanel').classList.remove('is-open');
+});
+// Wire tweak chips
+document.querySelectorAll('.tweaks-panel .tweak-chips').forEach(group => {
+  const key = group.dataset.tweak;
+  group.querySelectorAll('.tweak-chip').forEach(chip => {
+    chip.addEventListener('click', () => {
+      group.querySelectorAll('.tweak-chip').forEach(c => c.classList.remove('is-active'));
+      chip.classList.add('is-active');
+      const v = chip.dataset.value;
+      window.__tweaks[key] = v;
+      if (key === 'theme') applyTheme(v);
+      window.dispatchEvent(new CustomEvent('tweak-change', { detail: { key, value: v } }));
+      try { window.parent.postMessage({ type: '__edit_mode_set_keys', edits: { [key]: v } }, '*'); } catch(_) {}
+    });
+  });
+});
+window.parent.postMessage({ type: '__edit_mode_available' }, '*');
+</script>
+
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script src="https://unpkg.com/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
+
+<script type="text/babel" data-presets="react">
+// ===== Icons =====
+const IconSCPI = ({ size = 28 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 21h18" /><path d="M5 21V9l7-4 7 4v12" />
+    <path d="M9 21v-6h6v6" /><path d="M9 12h.01M15 12h.01" />
+  </svg>
+);
+const IconAV = ({ size = 28 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 21s-7-4.5-7-11a5 5 0 0 1 9-3 5 5 0 0 1 9 3c0 .5-.04 1-.11 1.48" />
+    <path d="M14 15l2 2 4-4" />
+  </svg>
+);
+const IconPE = ({ size = 28 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M3 17l5-5 4 4 8-8" /><path d="M15 8h6v6" />
+  </svg>
+);
+const IconCrowd = ({ size = 28 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <circle cx="9" cy="8" r="3" /><circle cx="17" cy="10" r="2.2" />
+    <path d="M3 20c0-3 3-5 6-5s6 2 6 5" /><path d="M14 20c0-2 2-3.5 4-3.5s3 .8 3 2" />
+  </svg>
+);
+const IconArrow = ({ size = 16 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 12h14M13 6l6 6-6 6" />
+  </svg>
+);
+const IconCheck = ({ size = 16 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 13l4 4L19 7" />
+  </svg>
+);
+const IconLock = ({ size = 16 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <rect x="4" y="11" width="16" height="10" rx="2" /><path d="M8 11V7a4 4 0 0 1 8 0v4" />
+  </svg>
+);
+const IconShield = ({ size = 20 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 3l8 3v6c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V6l8-3z" /><path d="M9 12l2 2 4-4" />
+  </svg>
+);
+const IconPhone = ({ size = 16 }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z" />
+  </svg>
+);
+
+// ===== Products =====
+const PRODUCTS = [
+  { id: 'scpi', name: 'SCPI', title: 'Société Civile de Placement Immobilier',
+    tagline: 'Immobilier sans gestion, revenus réguliers',
+    rateDefault: 5.0, rateMin: 3.0, rateMax: 8.0,
+    rateLabel: 'Taux de distribution (TD 2024 moyen)',
+    minAmount: 200, horizonRec: '8 à 12 ans', fiscality: 'Revenus fonciers', Icon: IconSCPI,
+    benefits: [
+      'Revenus potentiellement versés tous les mois ou trimestres',
+      "Mutualisation du risque sur des dizaines d'immeubles",
+      'Accessible dès 200 € la part'
+    ],
+    risk: 'Risque de perte en capital. Liquidité non garantie.' },
+  { id: 'av', name: 'Assurance-vie', title: 'Enveloppe fiscale multi-supports',
+    tagline: 'Souplesse, fiscalité avantageuse, transmission',
+    rateDefault: 4.0, rateMin: 2.0, rateMax: 7.0,
+    rateLabel: 'Rendement annuel moyen visé',
+    minAmount: 50, horizonRec: '8 ans et plus', fiscality: 'Fiscalité AV (abattement après 8 ans)', Icon: IconAV,
+    benefits: [
+      'Fonds euros, SCPI, SCI, Private Equity dans une même enveloppe',
+      'Fiscalité allégée après 8 ans de détention',
+      'Transmission hors succession jusqu\u2019à 152 500 € par bénéficiaire'
+    ],
+    risk: 'Hors fonds euros, risque de perte en capital sur UC.' },
+  { id: 'pe', name: 'Private Equity', title: "Investissement dans l'économie non cotée",
+    tagline: 'Rendement cible élevé, horizon long',
+    rateDefault: 8.0, rateMin: 5.0, rateMax: 15.0,
+    rateLabel: 'TRI cible (Taux de Rendement Interne)',
+    minAmount: 1000, horizonRec: '8 à 10 ans', fiscality: 'PFU 30 % ou régime PEA-PME', Icon: IconPE,
+    benefits: [
+      "Exposition à l'économie réelle et aux PME/ETI",
+      'Potentiel de performance supérieure aux marchés cotés',
+      'Décorrélation partielle avec la bourse'
+    ],
+    risk: 'Capital bloqué. Risque de perte totale en capital.' },
+  { id: 'cf', name: 'Crowdfunding', title: 'Financement participatif immobilier',
+    tagline: 'Court terme, rendement élevé, projet par projet',
+    rateDefault: 9.0, rateMin: 7.0, rateMax: 12.0,
+    rateLabel: 'Rendement brut annuel cible',
+    minAmount: 1000, horizonRec: '12 à 24 mois', fiscality: 'PFU 30 %', Icon: IconCrowd,
+    benefits: [
+      'Horizon court : généralement 12 à 24 mois',
+      'Rendement cible potentiellement supérieur à 9 % brut',
+      'Accessible dès 1 000 € par projet'
+    ],
+    risk: 'Risque de retard ou de défaut du promoteur.' }
+];
+
+// ===== Math =====
+function computeProjection(initial, monthly, years, rate) {
+  const r = rate / 100;
+  const rows = [{ year: 0, capital: initial, total: initial, interests: 0 }];
+  let capital = initial;
+  let total = initial;
+  for (let y = 1; y <= years; y++) {
+    const monthlyRate = Math.pow(1 + r, 1 / 12) - 1;
+    for (let m = 0; m < 12; m++) {
+      total = total * (1 + monthlyRate) + monthly;
+      capital += monthly;
+    }
+    rows.push({ year: y, capital: Math.round(capital), total: Math.round(total), interests: Math.round(total - capital) });
+  }
+  return rows;
+}
+
+// ===== Chart =====
+const ResultChart = ({ data, width = 560, height = 220, blurred = false }) => {
+  if (!data || data.length === 0) return null;
+  const pad = { top: 20, right: 16, bottom: 28, left: 52 };
+  const W = width - pad.left - pad.right;
+  const H = height - pad.top - pad.bottom;
+  const maxVal = Math.max(...data.map(d => d.total)) * 1.05;
+  const xStep = W / Math.max(1, data.length - 1);
+  const xy = (i, v) => [pad.left + i * xStep, pad.top + H - (v / maxVal) * H];
+  const capitalPath = data.map((d, i) => { const [x, y] = xy(i, d.capital); return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`; }).join(' ');
+  const totalPath = data.map((d, i) => { const [x, y] = xy(i, d.total); return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`; }).join(' ');
+  const interestArea = [
+    ...data.map((d, i) => { const [x, y] = xy(i, d.total); return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`; }),
+    ...[...data].reverse().map((d, i) => { const idx = data.length - 1 - i; const [x, y] = xy(idx, d.capital); return `L${x.toFixed(1)},${y.toFixed(1)}`; }),
+    'Z'
+  ].join(' ');
+  const capitalArea = [
+    ...data.map((d, i) => { const [x, y] = xy(i, d.capital); return `${i === 0 ? 'M' : 'L'}${x.toFixed(1)},${y.toFixed(1)}`; }),
+    `L${(pad.left + (data.length - 1) * xStep).toFixed(1)},${(pad.top + H).toFixed(1)}`,
+    `L${pad.left.toFixed(1)},${(pad.top + H).toFixed(1)}`,
+    'Z'
+  ].join(' ');
+  const fmtK = v => {
+    if (v >= 1_000_000) return (v / 1_000_000).toFixed(1).replace('.0','') + 'M€';
+    if (v >= 1000) return Math.round(v / 1000) + 'k€';
+    return Math.round(v) + '€';
+  };
+  const yTicks = [0, 0.25, 0.5, 0.75, 1].map(t => t * maxVal);
+  const xLabels = data.length <= 8
+    ? data.map((_, i) => i)
+    : [0, Math.floor(data.length / 4), Math.floor(data.length / 2), Math.floor(3 * data.length / 4), data.length - 1];
+  return (
+    <svg width="100%" viewBox={`0 0 ${width} ${height}`} style={{ display: 'block', filter: blurred ? 'blur(10px)' : 'none', opacity: blurred ? 0.6 : 1 }}>
+      <defs>
+        <linearGradient id="capGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#0a2637" stopOpacity="0.95" />
+          <stop offset="100%" stopColor="#0a2637" stopOpacity="0.6" />
+        </linearGradient>
+        <linearGradient id="intGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#e65f0e" stopOpacity="0.55" />
+          <stop offset="100%" stopColor="#e65f0e" stopOpacity="0.15" />
+        </linearGradient>
+      </defs>
+      {yTicks.map((t, i) => {
+        const y = pad.top + H - (t / maxVal) * H;
+        return (
+          <g key={i}>
+            <line x1={pad.left} x2={width - pad.right} y1={y} y2={y} stroke="#eef1f5" strokeWidth="1" strokeDasharray={i === 0 ? '0' : '3 3'} />
+            <text x={pad.left - 10} y={y + 4} fontSize="10.5" fontFamily="'IBM Plex Mono', ui-monospace, monospace" fill="#94a0ad" textAnchor="end">{fmtK(t)}</text>
+          </g>
+        );
+      })}
+      <path d={capitalArea} fill="url(#capGrad)" />
+      <path d={interestArea} fill="url(#intGrad)" />
+      <path d={capitalPath} fill="none" stroke="#0a2637" strokeWidth="1.5" />
+      <path d={totalPath} fill="none" stroke="#e65f0e" strokeWidth="2" />
+      {xLabels.map((i, k) => {
+        const [x] = xy(i, 0);
+        return <text key={k} x={x} y={height - 8} fontSize="10.5" fontFamily="'IBM Plex Mono', ui-monospace, monospace" fill="#94a0ad" textAnchor="middle">An {i}</text>;
+      })}
+      {!blurred && (() => {
+        const last = data[data.length - 1];
+        const [x, y] = xy(data.length - 1, last.total);
+        return (<g><circle cx={x} cy={y} r="5" fill="#e65f0e" stroke="#fff" strokeWidth="2.5" /></g>);
+      })()}
+    </svg>
+  );
+};
+
+// ===== Steps =====
+const StepProduct = ({ productId, onSelect }) => {
+  return (
+    <div className="step-wrap">
+      <div className="step-head">
+        <div className="step-kicker">Étape 1 sur 3</div>
+        <h2 className="step-title">Quel type de placement souhaitez-vous simuler ?</h2>
+        <p className="step-sub">Choisissez la solution qui correspond à votre projet. Les taux sont pré-renseignés à partir des moyennes de marché, vous pourrez les ajuster.</p>
+      </div>
+      <div className="product-grid">
+        {PRODUCTS.map(p => {
+          const Icon = p.Icon;
+          const active = productId === p.id;
+          return (
+            <button key={p.id} data-product={p.id} className={`product-card ${active ? 'is-active' : ''}`} onClick={() => onSelect(p.id)}>
+              <div className="product-icon-badge"><Icon size={22} /></div>
+              <div className="product-kicker">investir en</div>
+              <div className="product-name">{p.name}</div>
+              <div className="product-tagline">{p.tagline}</div>
+              <div className="product-rate">
+                <span className="rate-num">{p.rateDefault.toFixed(1).replace('.', ',')}%</span>
+                <span className="rate-label">/ an cible</span>
+              </div>
+              <div className="product-meta">
+                <div><span>Dès</span><strong>{p.minAmount} €</strong></div>
+                <div><span>Horizon</span><strong>{p.horizonRec}</strong></div>
+              </div>
+              {active && <div className="product-check"><IconCheck size={14} /></div>}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+const pctFill = (v, min, max) => `${((v - min) / (max - min)) * 100}%`;
+const StepInputs = ({ product, inputs, setInputs, onBack, onNext }) => {
+  const p = PRODUCTS.find(x => x.id === product);
+  const fmt = v => new Intl.NumberFormat('fr-FR').format(v);
+  return (
+    <div className="step-wrap">
+      <div className="step-head">
+        <div className="step-kicker">Étape 2 sur 3 · {p.name}</div>
+        <h2 className="step-title">Paramétrez votre simulation</h2>
+        <p className="step-sub">Ajustez les curseurs ou saisissez vos montants. La projection se met à jour en temps réel.</p>
+      </div>
+      <div className="inputs-grid">
+        <div className="field-card">
+          <div className="field-top">
+            <label>Montant initial</label>
+            <div className="field-value">{fmt(inputs.initial)} €</div>
+          </div>
+          <input type="range" min="1000" max="500000" step="500" value={inputs.initial}
+            style={{ '--fill': pctFill(inputs.initial, 1000, 500000) }}
+            onChange={e => setInputs({ ...inputs, initial: +e.target.value })} />
+          <div className="field-bounds"><span>1 000 €</span><span>500 000 €</span></div>
+        </div>
+        <div className="field-card">
+          <div className="field-top">
+            <label>Versement mensuel <em>(optionnel)</em></label>
+            <div className="field-value">{fmt(inputs.monthly)} €</div>
+          </div>
+          <input type="range" min="0" max="5000" step="50" value={inputs.monthly}
+            style={{ '--fill': pctFill(inputs.monthly, 0, 5000) }}
+            onChange={e => setInputs({ ...inputs, monthly: +e.target.value })} />
+          <div className="field-bounds"><span>0 €</span><span>5 000 €</span></div>
+        </div>
+        <div className="field-card">
+          <div className="field-top">
+            <label>Durée d'investissement</label>
+            <div className="field-value">{inputs.years} an{inputs.years > 1 ? 's' : ''}</div>
+          </div>
+          <input type="range" min="1" max="30" step="1" value={inputs.years}
+            style={{ '--fill': pctFill(inputs.years, 1, 30) }}
+            onChange={e => setInputs({ ...inputs, years: +e.target.value })} />
+          <div className="field-bounds"><span>1 an</span><span>30 ans</span></div>
+        </div>
+        <div className="field-card">
+          <div className="field-top">
+            <label>Taux de rendement annuel</label>
+            <div className="field-value">{inputs.rate.toFixed(1).replace('.', ',')} %</div>
+          </div>
+          <input type="range" min={p.rateMin} max={p.rateMax} step="0.1" value={inputs.rate}
+            style={{ '--fill': pctFill(inputs.rate, p.rateMin, p.rateMax) }}
+            onChange={e => setInputs({ ...inputs, rate: +e.target.value })} />
+          <div className="field-bounds">
+            <span>{p.rateMin} %</span>
+            <span className="rate-pill">Moyenne marché {p.rateDefault}%</span>
+            <span>{p.rateMax} %</span>
+          </div>
+          <p className="field-hint">{p.rateLabel}. Ces objectifs ne constituent pas une garantie.</p>
+        </div>
+      </div>
+      <div className="step-cta-row">
+        <button className="btn-ghost" onClick={onBack}>← Changer de solution</button>
+        <button className="btn-primary" onClick={onNext}>
+          Voir ma projection <IconArrow size={16} />
+        </button>
+      </div>
+    </div>
+  );
+};
+
+// ===== Result =====
+const fmtEur = v => new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(Math.round(v)) + ' €';
+
+const ResultHeadline = ({ data, unlocked }) => {
+  const last = data[data.length - 1];
+  const first = data[0];
+  const roiPct = first.capital > 0 ? ((last.total - last.capital) / last.capital) * 100 : 0;
+  return (
+    <div className={`result-headline ${unlocked ? '' : 'is-locked'}`}>
+      <div className="headline-label">Valeur projetée au terme</div>
+      <div className="headline-value">{fmtEur(last.total)}</div>
+      <div className="headline-split">
+        <div>
+          <span className="dot dot-capital" />
+          <span className="split-label">Apports cumulés</span>
+          <strong>{fmtEur(last.capital)}</strong>
+        </div>
+        <div>
+          <span className="dot dot-interest" />
+          <span className="split-label">Intérêts générés</span>
+          <strong className="interest">{fmtEur(last.interests)}</strong>
+        </div>
+        <div>
+          <span className="split-label">Performance globale</span>
+          <strong>{`+${roiPct.toFixed(1).replace('.', ',')} %`}</strong>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+const LeadForm = ({ onSubmit, productName }) => {
+  const [form, setForm] = React.useState({ firstName: '', lastName: '', email: '', phone: '', consent: false });
+  const [errors, setErrors] = React.useState({});
+  const [submitting, setSubmitting] = React.useState(false);
+  const validate = () => {
+    const e = {};
+    if (!form.firstName.trim()) e.firstName = 'Requis';
+    if (!form.lastName.trim()) e.lastName = 'Requis';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) e.email = 'Email invalide';
+    if (!/^[0-9\s+().-]{8,}$/.test(form.phone)) e.phone = 'Téléphone invalide';
+    if (!form.consent) e.consent = 'Consentement requis';
+    setErrors(e);
+    return Object.keys(e).length === 0;
+  };
+  const handle = async (e) => {
+    e.preventDefault();
+    if (!validate()) return;
+    setSubmitting(true);
+    setErrors({});
+    try {
+      await onSubmit(form);
+    } catch (err) {
+      console.error('[Weelim] Envoi échoué:', err);
+      setErrors({ _global: "Envoi impossible pour le moment. Merci de réessayer ou de nous appeler au 09 78 31 58 59." });
+      setSubmitting(false);
+    }
+  };
+  return (
+    <form className="lead-form" onSubmit={handle}>
+      <div className="lead-head">
+        <div className="lead-kicker"><IconLock size={14} /> Dernière étape</div>
+        <h3>Débloquez votre projection détaillée {productName}</h3>
+        <p>Recevez votre rapport complet par email et échangez avec un conseiller en gestion de patrimoine dédié.</p>
+      </div>
+      <div className="lead-grid">
+        <div className={`lead-field ${errors.firstName ? 'has-err' : ''}`}>
+          <label>Prénom</label>
+          <input type="text" value={form.firstName} onChange={e => setForm({ ...form, firstName: e.target.value })} placeholder="Marie" />
+        </div>
+        <div className={`lead-field ${errors.lastName ? 'has-err' : ''}`}>
+          <label>Nom</label>
+          <input type="text" value={form.lastName} onChange={e => setForm({ ...form, lastName: e.target.value })} placeholder="Dupont" />
+        </div>
+        <div className={`lead-field span-2 ${errors.email ? 'has-err' : ''}`}>
+          <label>Email</label>
+          <input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} placeholder="marie.dupont@email.fr" />
+        </div>
+        <div className={`lead-field span-2 ${errors.phone ? 'has-err' : ''}`}>
+          <label>Téléphone</label>
+          <input type="tel" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} placeholder="06 12 34 56 78" />
+        </div>
+      </div>
+      <label className={`consent ${errors.consent ? 'has-err' : ''}`}>
+        <input type="checkbox" checked={form.consent} onChange={e => setForm({ ...form, consent: e.target.checked })} />
+        <span>J'accepte d'être recontacté(e) par un conseiller Weelim et j'ai pris connaissance de la politique de confidentialité. Aucun engagement, gratuit et sans spam.</span>
+      </label>
+      {errors._global && <div className="lead-error">{errors._global}</div>}
+      <button className="btn-primary btn-block" type="submit" disabled={submitting}>
+        {submitting ? 'Envoi en cours…' : <>Débloquer ma projection <IconArrow size={16} /></>}
+      </button>
+      <div className="lead-trust">
+        <span><IconShield size={14} /> Données chiffrées</span>
+        <span><IconCheck size={14} /> Agréé Orias 19004224</span>
+        <span><IconCheck size={14} /> Aucun spam</span>
+      </div>
+    </form>
+  );
+};
+
+// ===== PDF Generator =====
+const WL_NAVY = [10, 38, 55];
+const WL_NAVY_2 = [22, 49, 65];
+const WL_ORANGE = [230, 95, 14];
+const WL_MUTED = [110, 120, 130];
+const WL_BORDER = [226, 232, 238];
+
+const WEELIM_LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 102.85 22.9"><path fill="#f8ead1" d="M28.13 22.25a7.9 7.9 0 0 1-4.52-5.91 8.75 8.75 0 0 1 .09-3.86 2.41 2.41 0 0 1 .4-1.05 8.25 8.25 0 0 1 2.06-3.06 6.9 6.9 0 0 1 3.79-1.87 1.74 1.74 0 0 1 .42-.07 3.95 3.95 0 0 0 .4 0 5.59 5.59 0 0 0-1.7 2.67 10.81 10.81 0 0 0-.64 4.71 9.19 9.19 0 0 0 1.75 4.9 4.58 4.58 0 0 0 3.22 1.99 4.08 4.08 0 0 0 3.12-1.12.85.85 0 0 1 .38-.25 7.76 7.76 0 0 1-2.2 2.3c-.07.18-.24.24-.38.32a6.83 6.83 0 0 1-3.38.95 6.69 6.69 0 0 1-2.81-.65Zm12.97-2.42a8.38 8.38 0 0 1-1.7-5.47 8.33 8.33 0 0 1 1.9-5.26 6.97 6.97 0 0 1 4.49-2.6 6.8 6.8 0 0 1 .78-.07 7.93 7.93 0 0 0-2.22 4.97 10.08 10.08 0 0 0 1.24 6.7 5.16 5.16 0 0 0 2.77 2.4 4.03 4.03 0 0 0 4.22-1.12.87.87 0 0 0 .13-.17l.07.06a7.52 7.52 0 0 1-3.02 2.8 6.24 6.24 0 0 1-2.82.71h-.1a6.96 6.96 0 0 1-5.74-2.95Zm24.25 2.86a5 5 0 0 1-.76-.12 2.1 2.1 0 0 0 1.08-1.99c-.01-3.62-.02-7.26 0-10.88a2.14 2.14 0 0 0-1.22-2.17l2.17-.3a.58.58 0 0 0 .31-.1 7.87 7.87 0 0 1 1.6-.3 3.67 3.67 0 0 1 1.2-.1c.66-.02.8.1.8.76v13.26a1.8 1.8 0 0 0 1.05 1.75.75.75 0 0 1-.63.18h-3.08q-1.27.02-2.52 0Zm-9.4 0-.19-.01c-.1-.01-.21-.03-.25-.12s.06-.17.13-.23a2.26 2.26 0 0 0 .82-1.96q-.02-8.44 0-16.88a3.97 3.97 0 0 0-.6-2.37 1.62 1.62 0 0 0-.5-.34l2.08-.32c.96-.14 1.91-.28 2.87-.4 1-.12 1.08-.04 1.13.94a1.38 1.38 0 0 1 .1.7l-.01 18.77a2.15 2.15 0 0 0 .85 1.9.33.33 0 0 1 .1.1.23.23 0 0 1 .03.08.54.54 0 0 1-.46.14H59Zm26.25-.12a2.17 2.17 0 0 0 1.1-2.1c-.03-2.89.02-5.78-.03-8.68a3.2 3.2 0 0 1 1.01-2.46 2.8 2.8 0 0 0 .52-.63 1.14 1.14 0 0 0-.6-1.7 2.95 2.95 0 0 0-1.83-.3 9.06 9.06 0 0 0-1.07.14 4.81 4.81 0 0 1 1.44-.35 5.06 5.06 0 0 1 4.11.95 3.84 3.84 0 0 1 1.27 2.72c.03.27.03.54.03.82 0 3.19.02 6.38 0 9.57a2.13 2.13 0 0 0 1.1 2.03Zm-8.5 0a2.22 2.22 0 0 0 .8-.77 1.97 1.97 0 0 0 .28-1.01V9.37a1.77 1.77 0 0 0-1.08-1.73c-.02-.01-.03-.05-.08-.11l2.56-.38 2.66-.39c.56-.09.8.1.8.67 0 4.4.01 8.81 0 13.21a2.06 2.06 0 0 0 1.1 1.93Zm17 0a2.08 2.08 0 0 0 1.05-1.36 2.06 2.06 0 0 0 .04-.57c0-2.98.03-5.97-.01-8.96a3 3 0 0 1 .91-2.25 4.09 4.09 0 0 0 .63-.77 1.06 1.06 0 0 0-.23-1.38 2.85 2.85 0 0 0-2.16-.59 6.62 6.62 0 0 0-1.13.14 4.55 4.55 0 0 1 1.54-.37 5.52 5.52 0 0 1 3.35.5 3.52 3.52 0 0 1 1.9 2.97c.17 2.81.03 5.63.07 8.44q.02 1.16 0 2.32a2.01 2.01 0 0 0 1.08 1.87ZM37.44 12.8H32.8c.69-.39.58-1.02.52-1.6a11.38 11.38 0 0 0-.48-2.55 3.98 3.98 0 0 0-1.37-2.17 3.68 3.68 0 0 1 1.3.2 7.35 7.35 0 0 1 4.7 4.96c.1.28.13.58.23.85s0 .32-.19.32Zm11.14-.02c.83-.45.6-1.17.55-1.83a9.05 9.05 0 0 0-.86-3.33 2.9 2.9 0 0 0-1.04-1.19c2.71.22 5.55 2.26 6.38 6.35Zm41.2-5.96h.02-.02ZM65.62 3.27a1.51 1.51 0 0 1 .02-1.05 2.5 2.5 0 0 1 4.9-.37l.1.3a.57.57 0 0 1 .11.47 2.67 2.67 0 0 1-2.38 2.47 2.3 2.3 0 0 1-.28.02 2.62 2.62 0 0 1-2.47-1.84Z"/><path fill="#e65f0e" d="M11.95 22.48a3.58 3.58 0 0 1-1.98-2.33 6.02 6.02 0 0 1-.21-1.75c0-3 .01-6-.01-9a1.88 1.88 0 0 0-1.07-1.75.12.12 0 0 1-.08-.13l2.5-.37c.9-.13 1.8-.25 2.7-.4.55-.08.81.12.81.68v10.33a2.9 2.9 0 0 1-.95 1.95 2.41 2.41 0 0 0-.71 1.08 1.08 1.08 0 0 0 .62 1.28 2.96 2.96 0 0 0 1.94.05 5.07 5.07 0 0 0 2.44-1.71 15.3 15.3 0 0 0 2.4-3.19.1.1 0 0 1 .04.16 8.27 8.27 0 0 1-4.7 5 6.15 6.15 0 0 1-2.15.45 3.7 3.7 0 0 1-1.59-.35Zm-8.64-.07a3.67 3.67 0 0 1-1.99-2.93 26.73 26.73 0 0 1-.11-4.03c-.02-1.97-.02-3.94 0-5.92A2 2 0 0 0 0 7.54c.6-.08 1.13-.17 1.65-.25 1.21-.18 2.43-.34 3.64-.53.57-.08.78.07.78.64 0 3.4-.03 6.78.02 10.18a2.83 2.83 0 0 1-.88 2.09 4.74 4.74 0 0 0-.6.74 1.14 1.14 0 0 0 .58 1.72 2.92 2.92 0 0 0 1.81 0l.73-.2a4.3 4.3 0 0 1-1.66.73 5.5 5.5 0 0 1-1.14.12 3.53 3.53 0 0 1-1.62-.37Zm97.87.19a1.57 1.57 0 0 1-1.6-1.58 1.64 1.64 0 0 1 1.62-1.66 1.68 1.68 0 0 1 1.65 1.63 1.62 1.62 0 0 1-1.52 1.61 1.32 1.32 0 0 1-.15 0Zm-93.44-.67Zm14.1-9.48h.01Zm-.17-.59a1.07 1.07 0 0 0-1.5-.63 2.53 2.53 0 0 1-2.86-.78 2.34 2.34 0 0 1-.43-2.36 2.4 2.4 0 0 1 1.82-1.67 2.6 2.6 0 0 1 3.14 2.45 21.49 21.49 0 0 1 .08 2.35 7.85 7.85 0 0 0-.08 1.23c-.18-.23-.11-.42-.17-.59Z"/></svg>`;
+
+async function loadWeelimLogoPng(targetH = 72) {
+  const svg = WEELIM_LOGO_SVG;
+  const vbMatch = /viewBox="([^"]+)"/.exec(svg);
+  const [, , vbW, vbH] = (vbMatch ? vbMatch[1] : '0 0 102.85 22.9').split(/\s+/).map(Number);
+  const aspect = vbW / vbH;
+  const h = targetH;
+  const w = Math.round(h * aspect);
+  const blob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  try {
+    const img = new Image();
+    img.src = url;
+    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
+    const canvas = document.createElement('canvas');
+    canvas.width = w * 4; canvas.height = h * 4;
+    const ctx = canvas.getContext('2d');
+    ctx.imageSmoothingEnabled = true;
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    return { dataUrl: canvas.toDataURL('image/png'), w, h };
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+async function renderChartSvgToPng(svgEl, targetWidth = 1600) {
+  if (!svgEl) return null;
+  const clone = svgEl.cloneNode(true);
+  clone.removeAttribute('style');
+  const vb = clone.getAttribute('viewBox') || '0 0 560 220';
+  const [, , vbW, vbH] = vb.split(/\s+/).map(Number);
+  const aspect = vbW / vbH;
+  const tW = targetWidth;
+  const tH = Math.round(tW / aspect);
+  clone.setAttribute('width', tW);
+  clone.setAttribute('height', tH);
+  clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  const svgStr = new XMLSerializer().serializeToString(clone);
+  const blob = new Blob([svgStr], { type: 'image/svg+xml;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  try {
+    const img = new Image();
+    img.src = url;
+    await new Promise((res, rej) => { img.onload = res; img.onerror = rej; });
+    const canvas = document.createElement('canvas');
+    canvas.width = tW; canvas.height = tH;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(0, 0, tW, tH);
+    ctx.drawImage(img, 0, 0, tW, tH);
+    return { dataUrl: canvas.toDataURL('image/png'), w: tW, h: tH };
+  } finally {
+    URL.revokeObjectURL(url);
+  }
+}
+
+async function generateWeelimPDF({ product, inputs, data, lead, refNumber }) {
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF({ unit: 'pt', format: 'a4' });
+  const W = doc.internal.pageSize.getWidth();
+  const H = doc.internal.pageSize.getHeight();
+  const M = 48;
+  const p = PRODUCTS.find(x => x.id === product);
+  const last = data[data.length - 1];
+  const first = data[0];
+  const roiPct = first.capital > 0 ? ((last.total - last.capital) / last.capital) * 100 : 0;
+  // Séparateur milliers par espace standard (U+0020) pour compat Helvetica/PDF
+  const fmt = v => Math.round(v).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ') + ' €';
+  const fmtDate = new Date().toLocaleDateString('fr-FR', { day: '2-digit', month: 'long', year: 'numeric' });
+
+  // Pré-chargement du logo (SVG inline → PNG via blob URL, compatible file://)
+  let logoImg = null;
+  try { logoImg = await loadWeelimLogoPng(72); } catch (e) { console.warn('[PDF] Logo indisponible', e); }
+
+  // HEADER BAND (navy)
+  doc.setFillColor(...WL_NAVY);
+  doc.rect(0, 0, W, 110, 'F');
+  doc.setFillColor(...WL_ORANGE);
+  doc.rect(0, 110, W, 4, 'F');
+
+  // Logo (image) ou fallback texte
+  if (logoImg) {
+    const logoH = 34;
+    const logoW = logoImg.w * (logoH / logoImg.h);
+    doc.addImage(logoImg.dataUrl, 'PNG', M, 38, logoW, logoH);
+  } else {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(22);
+    doc.setTextColor(255, 255, 255);
+    doc.text('Weelim', M, 60);
+  }
+
+  // Right side: document title + ref
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(13);
+  doc.setTextColor(255, 255, 255);
+  doc.text('Simulation personnalisée', W - M, 48, { align: 'right' });
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(9);
+  doc.setTextColor(200, 210, 220);
+  doc.text(`Réf. ${refNumber} · ${fmtDate}`, W - M, 62, { align: 'right' });
+  doc.text(`Produit : ${p.name}`, W - M, 78, { align: 'right' });
+
+  // BODY
+  let y = 150;
+
+  // Client name
+  if (lead) {
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.setTextColor(...WL_MUTED);
+    doc.text('PRÉPARÉ POUR', M, y);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.setTextColor(...WL_NAVY);
+    doc.text(`${lead.firstName} ${lead.lastName}`, M, y + 18);
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(...WL_MUTED);
+    doc.text(`${lead.email} · ${lead.phone}`, M, y + 32);
+    y += 58;
+  }
+
+  // Params card (navy background)
+  const paramsH = 72;
+  doc.setFillColor(...WL_NAVY_2);
+  doc.roundedRect(M, y, W - 2 * M, paramsH, 6, 6, 'F');
+  const cols = [
+    { label: 'Montant initial', value: fmt(inputs.initial) },
+    { label: 'Versement / mois', value: inputs.monthly > 0 ? fmt(inputs.monthly) : '—' },
+    { label: 'Durée', value: `${inputs.years} an${inputs.years > 1 ? 's' : ''}` },
+    { label: 'Taux annuel', value: `${inputs.rate.toFixed(1).replace('.', ',')} %` }
+  ];
+  const colW = (W - 2 * M) / cols.length;
+  cols.forEach((c, i) => {
+    const cx = M + i * colW + 18;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(160, 175, 190);
+    doc.text(c.label.toUpperCase(), cx, y + 24);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(15);
+    doc.setTextColor(255, 255, 255);
+    doc.text(c.value, cx, y + 48);
+  });
+  y += paramsH + 28;
+
+  // Big result
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(10);
+  doc.setTextColor(...WL_MUTED);
+  doc.text('VALEUR PROJETÉE AU TERME', M, y);
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(40);
+  doc.setTextColor(...WL_ORANGE);
+  doc.text(fmt(last.total), M, y + 40);
+  y += 62;
+
+  // Split row
+  const splits = [
+    { l: 'Apports cumulés', v: fmt(last.capital), c: WL_NAVY },
+    { l: 'Intérêts générés', v: fmt(last.interests), c: WL_ORANGE },
+    { l: 'Performance globale', v: `+${roiPct.toFixed(1).replace('.', ',')} %`, c: WL_NAVY }
+  ];
+  const splitColW = (W - 2 * M) / 3;
+  splits.forEach((s, i) => {
+    const cx = M + i * splitColW;
+    if (i > 0) {
+      doc.setDrawColor(...WL_BORDER);
+      doc.setLineWidth(0.5);
+      doc.line(cx, y, cx, y + 44);
+    }
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...WL_MUTED);
+    doc.text(s.l.toUpperCase(), cx + 14, y + 14);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.setTextColor(...s.c);
+    doc.text(s.v, cx + 14, y + 36);
+  });
+  y += 64;
+
+  // Year-by-year table (key years only, same logic as UI)
+  const keys = data.filter((_, i) =>
+    i === 0 || i === data.length - 1 || i % Math.max(1, Math.floor(data.length / 6)) === 0
+  );
+  const rows = keys.map(r => [
+    `An ${r.year}`,
+    fmt(r.capital),
+    r.interests > 0 ? '+' + fmt(r.interests) : '—',
+    fmt(r.total)
+  ]);
+  doc.autoTable({
+    startY: y,
+    head: [['Année', 'Apports cumulés', 'Intérêts', 'Capital projeté']],
+    body: rows,
+    margin: { left: M, right: M },
+    styles: { font: 'helvetica', fontSize: 10, cellPadding: 8, textColor: WL_NAVY, lineColor: WL_BORDER, lineWidth: 0.5 },
+    headStyles: { fillColor: WL_NAVY, textColor: [255, 255, 255], fontStyle: 'bold', fontSize: 9.5, halign: 'left' },
+    alternateRowStyles: { fillColor: [250, 251, 253] },
+    columnStyles: { 2: { textColor: WL_ORANGE, fontStyle: 'bold' }, 3: { fontStyle: 'bold' } }
+  });
+  y = doc.lastAutoTable.finalY + 18;
+
+  // Benefits / risk
+  if (y < H - 170) {
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.setTextColor(...WL_NAVY);
+    doc.text(`À savoir sur ${p.name}`, M, y);
+    y += 14;
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9.5);
+    doc.setTextColor(...WL_NAVY);
+    p.benefits.forEach(b => {
+      const lines = doc.splitTextToSize('• ' + b, W - 2 * M);
+      doc.text(lines, M, y + 12);
+      y += 12 * lines.length + 2;
+    });
+    y += 6;
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(8.5);
+    doc.setTextColor(...WL_MUTED);
+    const riskLines = doc.splitTextToSize('Attention — ' + p.risk, W - 2 * M);
+    doc.text(riskLines, M, y + 10);
+  }
+
+  // PAGE 2 — Graphique de projection (tel qu'affiché sur le site)
+  try {
+    const chartSvg = document.querySelector('.chart-wrap svg');
+    const chartImg = chartSvg ? await renderChartSvgToPng(chartSvg, 1600) : null;
+    if (chartImg) {
+      doc.addPage();
+      // Header mini sur page 2
+      doc.setFillColor(...WL_NAVY);
+      doc.rect(0, 0, W, 60, 'F');
+      doc.setFillColor(...WL_ORANGE);
+      doc.rect(0, 60, W, 3, 'F');
+      if (logoImg) {
+        const lh = 22;
+        const lw = logoImg.w * (lh / logoImg.h);
+        doc.addImage(logoImg.dataUrl, 'PNG', M, 20, lw, lh);
+      }
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(10);
+      doc.setTextColor(255, 255, 255);
+      doc.text(`Projection ${p.name} · Réf. ${refNumber}`, W - M, 38, { align: 'right' });
+
+      let y2 = 100;
+      doc.setFont('helvetica', 'bold');
+      doc.setFontSize(18);
+      doc.setTextColor(...WL_NAVY);
+      doc.text('Évolution de votre épargne', M, y2);
+      y2 += 14;
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(...WL_MUTED);
+      doc.text(`Apports cumulés vs. intérêts composés sur ${inputs.years} ans`, M, y2 + 10);
+      y2 += 30;
+
+      // Légende
+      const legendY = y2;
+      doc.setFillColor(...WL_NAVY);
+      doc.circle(M + 5, legendY, 4, 'F');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(...WL_NAVY);
+      doc.text('Apports', M + 16, legendY + 3);
+      doc.setFillColor(...WL_ORANGE);
+      doc.circle(M + 90, legendY, 4, 'F');
+      doc.text('Intérêts composés', M + 101, legendY + 3);
+      y2 += 18;
+
+      // Image du chart
+      const chartW = W - 2 * M;
+      const chartH = chartW * (chartImg.h / chartImg.w);
+      doc.addImage(chartImg.dataUrl, 'PNG', M, y2, chartW, chartH);
+      y2 += chartH + 18;
+
+      // Encadré synthèse sous le chart
+      doc.setFillColor(250, 251, 253);
+      doc.setDrawColor(...WL_BORDER);
+      doc.roundedRect(M, y2, W - 2 * M, 90, 6, 6, 'FD');
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(9);
+      doc.setTextColor(...WL_MUTED);
+      doc.text('LECTURE DU GRAPHIQUE', M + 16, y2 + 20);
+      doc.setFont('helvetica', 'normal');
+      doc.setFontSize(10);
+      doc.setTextColor(...WL_NAVY);
+      const explain = `Sur ${inputs.years} ans, vos apports cumulés atteignent ${fmt(last.capital)}. Les intérêts composés génèrent ${fmt(last.interests)} supplémentaires, soit une performance globale de +${roiPct.toFixed(1).replace('.', ',')} %. Capital projeté au terme : ${fmt(last.total)}.`;
+      const expLines = doc.splitTextToSize(explain, W - 2 * M - 32);
+      doc.text(expLines, M + 16, y2 + 38);
+    }
+  } catch (e) {
+    console.warn('[PDF] Rendu du graphique échoué :', e);
+  }
+
+  // FOOTER (sur chaque page) — sans disclaimer
+  const pages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= pages; i++) {
+    doc.setPage(i);
+    doc.setDrawColor(...WL_BORDER);
+    doc.setLineWidth(0.5);
+    doc.line(M, H - 40, W - M, H - 40);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(...WL_NAVY);
+    doc.text('weelim.fr · 09 78 31 58 59', M, H - 22);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(...WL_MUTED);
+    doc.text(`Page ${i} / ${pages}`, W - M, H - 22, { align: 'right' });
+  }
+
+  const filename = lead
+    ? `Simulation-Weelim-${p.name.replace(/\s+/g, '')}-${lead.lastName}.pdf`
+    : `Simulation-Weelim-${p.name.replace(/\s+/g, '')}.pdf`;
+  doc.save(filename);
+}
+
+const StepResult = ({ product, inputs, data, unlocked, onUnlock, onRestart, lead, refNumber }) => {
+  const p = PRODUCTS.find(x => x.id === product);
+  return (
+    <div className="step-wrap result-wrap">
+      <div className="step-head">
+        <div className="step-kicker">Étape 3 sur 3 · Projection {p.name}</div>
+        <h2 className="step-title">{unlocked ? 'Voici votre projection détaillée' : 'Votre projection est prête'}</h2>
+        <p className="step-sub">
+          Simulation sur {inputs.years} ans avec {fmtEur(inputs.initial)} initial
+          {inputs.monthly > 0 ? ` + ${fmtEur(inputs.monthly)} / mois` : ''} à {inputs.rate.toFixed(1).replace('.', ',')} %.
+        </p>
+      </div>
+      <div className="result-layout">
+        <div className="result-left">
+          <ResultHeadline data={data} unlocked={unlocked} />
+          <div className="chart-card">
+            <div className="chart-legend">
+              <span><i className="dot dot-capital" /> Apports</span>
+              <span><i className="dot dot-interest" /> Intérêts composés</span>
+            </div>
+            <div className="chart-wrap">
+              <ResultChart data={data} blurred={!unlocked} />
+              {!unlocked && (
+                <div className="chart-mask">
+                  <div className="mask-pill"><IconLock size={14} /> Graphique disponible après inscription</div>
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="decomp-card">
+            <div className="decomp-head">
+              <h4>Décomposition année par année</h4>
+              <span className="decomp-tag">{data.length - 1} exercices</span>
+            </div>
+            <div className={`decomp-table ${unlocked ? '' : 'is-blurred'}`}>
+              <div className="decomp-row decomp-head-row">
+                <span>Année</span><span>Apports</span><span>Intérêts</span><span>Capital</span>
+              </div>
+              {data.filter((_, i) => i === 0 || i === data.length - 1 || i % Math.max(1, Math.floor(data.length / 6)) === 0).map(r => (
+                <div key={r.year} className="decomp-row">
+                  <span>An {r.year}</span>
+                  <span>{fmtEur(r.capital)}</span>
+                  <span className="interest">{r.interests > 0 ? '+' + fmtEur(r.interests) : '—'}</span>
+                  <span><strong>{fmtEur(r.total)}</strong></span>
+                </div>
+              ))}
+            </div>
+            {!unlocked && <div className="decomp-mask-note"><IconLock size={13} /> Tableau complet après inscription</div>}
+          </div>
+        </div>
+        <div className="result-right">
+          {!unlocked ? (
+            <LeadForm productName={p.name} onSubmit={onUnlock} />
+          ) : (
+            <div className="unlock-card">
+              <div className="unlock-badge"><IconCheck size={14} /> Accès débloqué</div>
+              <h3>Votre rapport est prêt</h3>
+              <p>Un conseiller Weelim vous contactera dans les <strong>24 h ouvrées</strong> pour approfondir votre projet {p.name}.</p>
+              <div className="unlock-actions">
+                <button className="btn-primary btn-block"><IconPhone size={14} /> Prendre RDV avec un expert</button>
+                <button className="btn-outline btn-block" onClick={() => generateWeelimPDF({ product, inputs, data, lead, refNumber })}>📄 Télécharger le PDF</button>
+                <button className="btn-ghost btn-block" onClick={onRestart}>Nouvelle simulation</button>
+              </div>
+              <div className="unlock-meta">
+                <div>Contact : conseiller dédié · 09 78 31 58 59</div>
+                <div>Référence : {refNumber}</div>
+              </div>
+            </div>
+          )}
+          <div className="side-card">
+            <h5>À savoir sur {p.name}</h5>
+            <ul>
+              {p.benefits.map((b, i) => <li key={i}><IconCheck size={13} /> {b}</li>)}
+            </ul>
+            <div className="risk-note">⚠︎ {p.risk}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+</script>
+
+<script type="text/babel">
+const { useState, useMemo, useEffect } = React;
+
+// ============================================================
+// CONFIG FORMSPREE — REMPLACEZ "xxxxxxxx" par votre identifiant
+// (Ex: https://formspree.io/f/mgvllodq → mettez 'mgvllodq')
+// Comment l'obtenir : formspree.io → New Form → copiez l'ID.
+// ============================================================
+const FORMSPREE_ID = 'xojykldj';
+const FORMSPREE_ENDPOINT = `https://formspree.io/f/${FORMSPREE_ID}`;
+
+function App() {
+  const [step, setStep] = useState(1);
+  const [product, setProduct] = useState('scpi');
+  const [inputs, setInputs] = useState({ initial: 25000, monthly: 200, years: 15, rate: 5.0 });
+  const [unlocked, setUnlocked] = useState(false);
+  const [lead, setLead] = useState(null);
+  const [refNumber] = useState(() => 'WL-' + Date.now().toString().slice(-6));
+  const [, forceRerender] = useState(0);
+
+  useEffect(() => {
+    const onTweak = () => forceRerender(x => x + 1);
+    window.addEventListener('tweak-change', onTweak);
+    return () => window.removeEventListener('tweak-change', onTweak);
+  }, []);
+
+  // When product changes, align default rate
+  useEffect(() => {
+    const p = PRODUCTS.find(x => x.id === product);
+    setInputs(i => ({ ...i, rate: p.rateDefault }));
+  }, [product]);
+
+  const data = useMemo(() => computeProjection(inputs.initial, inputs.monthly, inputs.years, inputs.rate), [inputs]);
+
+  const onUnlock = async (formData) => {
+    const p = PRODUCTS.find(x => x.id === product);
+    const last = data[data.length - 1];
+    const payload = {
+      _subject: `Nouveau lead simulateur Weelim — ${formData.firstName} ${formData.lastName}`,
+      prenom: formData.firstName,
+      nom: formData.lastName,
+      email: formData.email,
+      telephone: formData.phone,
+      consentement: formData.consent ? 'Oui' : 'Non',
+      produit: p.name,
+      produit_id: product,
+      montant_initial_eur: inputs.initial,
+      versement_mensuel_eur: inputs.monthly,
+      duree_annees: inputs.years,
+      taux_annuel_pct: inputs.rate,
+      valeur_projetee_eur: last.total,
+      apports_cumules_eur: last.capital,
+      interets_generes_eur: last.interests,
+      source: 'Simulateur Weelim',
+      date_iso: new Date().toISOString(),
+      page_url: window.location.href
+    };
+
+    // Mode démo (endpoint non configuré) : on logge et on débloque
+    if (FORMSPREE_ID === 'xxxxxxxx') {
+      console.warn('[Weelim] FORMSPREE_ID non configuré — lead non envoyé, mode démo.');
+      console.log('[Weelim] Payload :', payload);
+      setLead(formData);
+      setUnlocked(true);
+      return;
+    }
+
+    const res = await fetch(FORMSPREE_ENDPOINT, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!res.ok) {
+      const body = await res.text().catch(() => '');
+      throw new Error(`Formspree ${res.status} — ${body}`);
+    }
+    setLead(formData);
+    setUnlocked(true);
+  };
+  const onRestart = () => {
+    setStep(1); setUnlocked(false); setLead(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Apply gate tweak
+  const gateMode = window.__tweaks.gate || 'blur';
+  const effectiveUnlocked = gateMode === 'open' ? true : unlocked;
+
+  return (
+    <>
+      <div className="progress">
+        <div className={`progress-step ${step >= 1 ? 'is-active' : ''} ${step > 1 ? 'is-done' : ''}`}>
+          <span className="num">1</span> Solution
+        </div>
+        <div className={`progress-step ${step === 2 ? 'is-active' : ''} ${step > 2 ? 'is-done' : ''}`}>
+          <span className="num">2</span> Paramètres
+        </div>
+        <div className={`progress-step ${step === 3 ? 'is-active' : ''}`}>
+          <span className="num">3</span> Projection & contact
+        </div>
+      </div>
+
+      {step === 1 && (
+        <>
+          <StepProduct productId={product} onSelect={setProduct} />
+          <div className="step-cta-row" style={{ justifyContent: 'flex-end' }}>
+            <button className="btn-primary" onClick={() => setStep(2)}>
+              Continuer avec {PRODUCTS.find(p => p.id === product).name} <IconArrow size={16} />
+            </button>
+          </div>
+        </>
+      )}
+      {step === 2 && (
+        <StepInputs product={product} inputs={inputs} setInputs={setInputs}
+          onBack={() => setStep(1)} onNext={() => { setStep(3); window.scrollTo({ top: 0, behavior: 'smooth' }); }} />
+      )}
+      {step === 3 && (
+        <StepResult product={product} inputs={inputs} data={data}
+          unlocked={effectiveUnlocked} onUnlock={onUnlock} onRestart={onRestart}
+          lead={lead} refNumber={refNumber} />
+      )}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('app')).render(<App />);
+</script>
+</body>
+</html>
