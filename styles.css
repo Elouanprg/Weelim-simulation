@@ -35,22 +35,23 @@ input, select { font-family: inherit; }
 .site-header {
   background: var(--ink);
   color: #fff;
-  padding: 26px 180px;
-  display: flex; align-items: center; gap: 36px;
+  padding: 20px 40px;
+  display: flex; align-items: center; gap: 24px;
   position: sticky; top: 0; z-index: 40;
 }
-.site-header .logo { height: 34px; display: block; }
-.site-header nav { display: flex; gap: 36px; font-size: 15px; margin-left: 18px; }
-.site-header nav a { color: rgba(255,255,255,0.9); text-decoration: none; font-weight: 500; }
+.site-header .logo { height: 34px; display: block; flex-shrink: 0; }
+.site-header nav { display: flex; gap: 28px; font-size: 15px; margin-left: 8px; flex-shrink: 0; }
+.site-header nav a { color: rgba(255,255,255,0.9); text-decoration: none; font-weight: 500; white-space: nowrap; }
 .site-header nav a:hover { color: #fff; }
 .site-header .phone {
   background: var(--ink-3); color: #fff;
   padding: 11px 20px; border-radius: 999px;
   font-size: 14px; font-weight: 500;
   display: inline-flex; align-items: center; gap: 8px;
+  white-space: nowrap; flex-shrink: 0;
 }
 .header-search {
-  flex: 1; max-width: 420px;
+  flex: 1; min-width: 0; max-width: 420px;
   margin: 0 auto;
   background: var(--ink-2);
   border: 1px solid rgba(255,255,255,0.08);
@@ -60,7 +61,7 @@ input, select { font-family: inherit; }
   color: rgba(255,255,255,0.55);
 }
 .header-search input {
-  flex: 1;
+  flex: 1; min-width: 0;
   background: transparent;
   border: none; outline: none;
   color: #fff;
@@ -73,6 +74,7 @@ input, select { font-family: inherit; }
   font-weight: 600; font-size: 14.5px;
   display: inline-flex; align-items: center; gap: 8px;
   transition: all .15s;
+  white-space: nowrap; flex-shrink: 0;
 }
 .site-header .cta:hover { background: var(--orange-hover); }
 
